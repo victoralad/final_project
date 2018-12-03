@@ -5,8 +5,9 @@ import rospy
 import copy, math
 #import moveit_commander
 
-from moveit_python import RobotCommander, MoveGroupCommander
-from moveit_python import PlanningSceneInterface, roscpp_initialize, roscpp_shutdown
+# from moveit_python import RobotCommander, MoveGroupCommander
+import moveit_commander
+# from moveit_python import PlanningSceneInterface
 from geometry_msgs.msg import PoseStamped
 from moveit_msgs.msg import Grasp, GripperTranslation, PlaceLocation, MoveItErrorCodes
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -17,7 +18,7 @@ ROBOT_NAME = "fetch"
 
 if ROBOT_NAME == "fetch":
     GROUP_NAME_ARM = 'arm_with_torso'
-    GROUP_NAME_GRIPPER = 'r_gripper'
+    GROUP_NAME_GRIPPER = 'gripper'
 
     GRIPPER_FRAME = 'r_gripper_finger_link'
 
@@ -33,14 +34,14 @@ if ROBOT_NAME == "fetch":
 class TestPick():
     def __init__(self):
 
-        roscpp_initialize(sys.argv)
+        moveit_commander.roscpp_initialize(sys.argv)
         rospy.init_node('moveit_py_demo', anonymous=True)
        
-        scene = PlanningSceneInterface()
-        robot = RobotCommander()
+        scene = moveit_commander.PlanningSceneInterface()
+        robot = moveit_commander.RobotCommander()
         
-        right_arm = MoveGroupCommander(GROUP_NAME_ARM)
-        right_gripper = MoveGroupCommander(GROUP_NAME_GRIPPER)
+        right_arm = moveit_commander.MoveGroupCommander(GROUP_NAME_ARM)
+        right_gripper = moveit_commander.MoveGroupCommander(GROUP_NAME_GRIPPER)
         
         eef = right_arm.get_end_effector_link()
         
@@ -53,11 +54,11 @@ class TestPick():
         scene.remove_world_object("table")
         scene.remove_world_object("part")
     
-        right_arm.set_named_target("resting")
-        right_arm.go()
+        #right_arm.set_named_target("resting")
+        #right_arm.go()
        
-        right_gripper.set_named_target("open")
-        right_gripper.go()
+        #right_gripper.set_named_target("open")
+        #right_gripper.go()
        
         rospy.sleep(1)
     
@@ -108,13 +109,13 @@ class TestPick():
         
         # repeat until will succeed
         while result == False:
-            result = robot.right_arm.pick("part", grasps)       
+            result = right_arm.pick("part", grasps)       
             n_attempts += 1
             print "Attempts: ", n_attempts
             rospy.sleep(0.2)
            
         rospy.spin()
-        roscpp_shutdown()
+        moveit_commander.roscpp_shutdown()
         
         
     # Get the gripper posture as a JointTrajectory
