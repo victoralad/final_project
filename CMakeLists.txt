@@ -199,14 +199,14 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(grasp src/cc_grasp.cpp)
+#add_executable(grasp src/cc_grasp.cpp)
 #find_package(Eigen REQUIRED)
 #include_directories(/usr/include/eigen3)
 #target_link_libraries(pick_place_tutorial ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 #install(TARGETS pick_place_tutorial DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
+#set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+#find_package(Eigen3 REQUIRED)
+#include_directories(${EIGEN3_INCLUDE_DIR})
 
 
