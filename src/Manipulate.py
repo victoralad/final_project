@@ -22,6 +22,18 @@ from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 planned_pose = rospy.wait_for_message("/planned_grasp", PoseStamped, timeout=None)
 print "Receieved grasp pose:\n" + planned_pose.__str__()
 
+# Open gripper
+from control_msgs.msg import GripperCommandAction, GripperCommandGoal
+client = actionlib.SimpleActionClient('/gripper_controller/gripper_action', GripperCommandAction)
+client.wait_for_server()
+print("Gripper control server online and connected")
+# Open
+goal = GripperCommandGoal()
+goal.command.position = 0.1 # Distance between fingers in m, max: 0.1
+goal.command.max_effort = 40  # Force by fingers in N, max: 60
+client.send_goal(goal)
+client.wait_for_result(rospy.Duration.from_sec(5.0))
+
 # Plan and Move to a goal pose
 # This is the wrist link not the gripper itself
 # The middle between the gripper fingers is 0.16645 m along the x axis
@@ -117,12 +129,7 @@ for pose in approach_poses:
 # It should be called when a program is exiting so movement stops
 move_group.get_move_action().cancel_all_goals()
 
-# Close gripper
-from control_msgs.msg import GripperCommandAction, GripperCommandGoal
-client = actionlib.SimpleActionClient('/gripper_controller/gripper_action', GripperCommandAction)
-client.wait_for_server()
-print("Gripper control server online and connected")
-# Close
+# Close Gripper
 goal = GripperCommandGoal()
 goal.command.position = 0  # Distance between fingers in m, max: 0.1
 goal.command.max_effort = 40  # Force by fingers in N, max: 60
